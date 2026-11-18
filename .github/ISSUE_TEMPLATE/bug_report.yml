@@ -1,0 +1,53 @@
+name: Bug report
+description: Something in A+ Arcade is wrong on iOS, Android, or web.
+title: "[Bug] "
+labels: []
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What went wrong, in one or two sentences.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: What you tapped, including the exam or domain filter.
+      placeholder: |
+        1. Open the app
+        2. Start a Core 1 round
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Web
+        - iOS
+        - Android
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: The version from package.json, or the commit you were running.
+      placeholder: 1.0.0
+    validations:
+      required: true
