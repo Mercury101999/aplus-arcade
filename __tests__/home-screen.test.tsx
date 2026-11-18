@@ -1,9 +1,9 @@
-import { screen, userEvent } from '@testing-library/react-native';
+import { screen } from '@testing-library/react-native';
 
 import { emptyProgress, type ProgressState } from '@/game/progress';
 import { HomeScreen } from '@/screens/home-screen';
 
-import { renderApp } from './render';
+import { press, renderApp } from './render';
 
 function withReview(): ProgressState {
   return {
@@ -22,16 +22,14 @@ describe('HomeScreen', () => {
     await renderApp(
       <HomeScreen state={emptyProgress()} onStart={onStart} onRetry={onRetry} onOpenProgress={jest.fn()} />,
     );
-    const user = userEvent.setup();
-
-    await user.press(screen.getByRole('radio', { name: 'Core 1 · 220-1101' }));
-    await user.press(screen.getByRole('radio', { name: 'Networking' }));
-    await user.press(screen.getByRole('button', { name: 'Start round' }));
+    await press(screen.getByRole('radio', { name: 'Core 1 · 220-1101' }));
+    await press(screen.getByRole('radio', { name: 'Networking' }));
+    await press(screen.getByRole('button', { name: 'Start round' }));
     expect(onStart).toHaveBeenCalledWith('220-1101', 'networking');
 
     const retry = screen.getByRole('button', { name: 'Retry missed' });
     expect(retry.props.accessibilityState.disabled).toBe(true);
-    await user.press(retry);
+    await press(retry);
     expect(onRetry).not.toHaveBeenCalled();
   });
 
@@ -40,7 +38,7 @@ describe('HomeScreen', () => {
     await renderApp(
       <HomeScreen state={withReview()} onStart={jest.fn()} onRetry={onRetry} onOpenProgress={jest.fn()} />,
     );
-    await userEvent.setup().press(screen.getByRole('button', { name: 'Retry missed (2)' }));
+    await press(screen.getByRole('button', { name: 'Retry missed (2)' }));
     expect(onRetry).toHaveBeenCalledTimes(1);
     expect(screen.getByText(/1 missed and 1 low-confidence/)).toBeTruthy();
   });

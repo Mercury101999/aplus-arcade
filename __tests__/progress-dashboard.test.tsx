@@ -1,10 +1,10 @@
-import { screen, userEvent } from '@testing-library/react-native';
+import { screen } from '@testing-library/react-native';
 
 import { questionBank } from '@/content/bank';
 import { applyAnswer, emptyProgress } from '@/game/progress';
 import { ProgressDashboard } from '@/screens/progress-dashboard';
 
-import { renderApp } from './render';
+import { press, renderApp } from './render';
 
 describe('ProgressDashboard', () => {
   it('shows weakest-domain order, calibration, and a confirmed reset', async () => {
@@ -27,14 +27,13 @@ describe('ProgressDashboard', () => {
     expect(screen.getByText(/Confidently wrong/)).toBeTruthy();
     expect(screen.getAllByText(/1 of 3 correct/).length).toBeGreaterThan(0);
 
-    const user = userEvent.setup();
-    await user.press(screen.getByRole('button', { name: 'Reset progress' }));
+    await press(screen.getByRole('button', { name: 'Reset progress' }));
     expect(screen.getByText('Erase progress?')).toBeTruthy();
-    await user.press(screen.getByRole('button', { name: 'Keep progress' }));
+    await press(screen.getByRole('button', { name: 'Keep progress' }));
     expect(onReset).not.toHaveBeenCalled();
 
-    await user.press(screen.getByRole('button', { name: 'Reset progress' }));
-    await user.press(screen.getByRole('button', { name: 'Erase progress' }));
+    await press(screen.getByRole('button', { name: 'Reset progress' }));
+    await press(screen.getByRole('button', { name: 'Erase progress' }));
     expect(onReset).toHaveBeenCalledTimes(1);
   });
 });

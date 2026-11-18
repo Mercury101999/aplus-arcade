@@ -1,10 +1,10 @@
-import { screen, userEvent } from '@testing-library/react-native';
+import { screen } from '@testing-library/react-native';
 
 import { QuizSession } from '@/components/quiz-session';
 import type { Question } from '@/content/types';
 import { isSelectionCorrect } from '@/game/quiz';
 
-import { renderApp } from './render';
+import { press, renderApp } from './render';
 
 const questions: Question[] = [
   {
@@ -54,17 +54,16 @@ describe('QuizSession', () => {
       />,
     );
 
-    const user = userEvent.setup();
     expect(screen.getByText('How sure are you?')).toBeTruthy();
     const check = screen.getByRole('button', { name: 'Check answer' });
     expect(check.props.accessibilityState.disabled).toBe(true);
-    await user.press(check);
+    await press(check);
     expect(onGrade).not.toHaveBeenCalled();
     expect(screen.queryByText(/fixture uses port 443/)).toBeNull();
 
-    await user.press(screen.getByRole('radio', { name: 'Port 80' }));
-    await user.press(screen.getByRole('radio', { name: 'Sure' }));
-    await user.press(screen.getByRole('button', { name: 'Check answer' }));
+    await press(screen.getByRole('radio', { name: 'Port 80' }));
+    await press(screen.getByRole('radio', { name: 'Sure' }));
+    await press(screen.getByRole('button', { name: 'Check answer' }));
 
     expect(screen.getByText('Not quite')).toBeTruthy();
     expect(screen.getByText(/Confidently wrong/)).toBeTruthy();
@@ -72,13 +71,13 @@ describe('QuizSession', () => {
     expect(screen.getByText(/fixture uses port 443/)).toBeTruthy();
     expect(onGrade).toHaveBeenCalledTimes(1);
 
-    await user.press(screen.getByRole('button', { name: 'Next question' }));
+    await press(screen.getByRole('button', { name: 'Next question' }));
     expect(screen.getByText('Question 2 of 2')).toBeTruthy();
 
-    await user.press(screen.getByRole('radio', { name: 'This one' }));
-    await user.press(screen.getByRole('radio', { name: 'Somewhat' }));
-    await user.press(screen.getByRole('button', { name: 'Check answer' }));
-    await user.press(screen.getByRole('button', { name: 'See results' }));
+    await press(screen.getByRole('radio', { name: 'This one' }));
+    await press(screen.getByRole('radio', { name: 'Somewhat' }));
+    await press(screen.getByRole('button', { name: 'Check answer' }));
+    await press(screen.getByRole('button', { name: 'See results' }));
 
     expect(screen.getByText('Round complete')).toBeTruthy();
     expect(screen.getByText(/1 of 2 correctly/)).toBeTruthy();
